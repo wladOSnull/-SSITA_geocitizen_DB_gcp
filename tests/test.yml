@@ -2,4 +2,4 @@
 - hosts: localhost
   remote_user: root
   roles:
-    - SSITA_geocitizen_DB
+    - SSITA_geocitizen_DB_gcp

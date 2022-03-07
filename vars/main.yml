@@ -1,5 +1,5 @@
 ---
-# vars file for SSITA_geocitizen_DB
+# vars file for SSITA_geocitizen_DB_gcp
 
 db_name: ss_demo_1
 db_user: geocitizen

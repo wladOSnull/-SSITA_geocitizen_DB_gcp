@@ -1,5 +1,5 @@
 ---
-# handlers file for SSITA_geocitizen_DB
+# handlers file for SSITA_geocitizen_DB_gcp
 
 - name: restart PostreSQL
   become: yes

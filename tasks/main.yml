@@ -1,5 +1,5 @@
 ---
-# tasks file for SSITA_geocitizen_DB
+# tasks file for SSITA_geocitizen_DB_gcp
 
 - include_tasks: preset.yaml
 - include_tasks: preset_postgresql.yaml
