@@ -1,11 +1,8 @@
 ---
 # tasks file for SSITA_geocitizen_DB_gcp
 
-- name: update yum cache
-  yum:
-    update_cache: yes
-
 - name: download node_exporter and unpack
+  become: yes
   ansible.builtin.unarchive:
     src: https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz
     dest: /usr/local/bin
@@ -17,11 +14,13 @@
     group: root
 
 - name: add the group node_exporter
+  become: yes
   ansible.builtin.group:
     name: node_exporter
     state: present
 
 - name: add the user node_exporter
+  become: yes
   ansible.builtin.user:
     name: node_exporter
     groups: node_exporter
@@ -29,12 +28,14 @@
     state: present
 
 - name: create service unit for node_exporter  
+  become: yes
   ansible.builtin.copy:
     src: node_exporter.service
     dest: /etc/systemd/system/node_exporter.service
     mode: '777'
 
 - name: restart systemd and start+enable node_exporter service unit
+  become: yes
   ansible.builtin.systemd:
     daemon_reload: yes
     state: started
