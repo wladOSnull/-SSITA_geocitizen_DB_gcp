@@ -1,6 +1,7 @@
 ---
 
 - name: check repository script file
+  become: yes
   stat:
     path: /tmp/script.rpm.sh
   register: script_file
@@ -32,18 +33,21 @@
     mode: '0644'
 
 - name: edit sensu-agent config file - backend list
+  become: yes
   ansible.builtin.lineinfile:
     path: /etc/sensu/agent.yml
     regexp: '#backend-url:'
     line: 'backend-url:'
 
 - name: edit sensu-agent config file - basckend url
+  become: yes
   ansible.builtin.replace:
     path: /etc/sensu/agent.yml
     regexp: '#  - \"ws://127.0.0.1:8081\"'
     replace: '  - "ws://{{ sensu_backend }}"'
 
 - name: restart systemd and start+enable sensu-agent
+  become: yes
   ansible.builtin.systemd:
     daemon_reload: yes
     state: started
