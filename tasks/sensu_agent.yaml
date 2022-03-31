@@ -12,12 +12,10 @@
     url: https://packagecloud.io/install/repositories/sensu/stable/script.rpm.sh
     dest: /tmp/script.rpm.sh
     mode: '0755'
-  when: not script_file.stat.exists
 
 - name: install SensuGO repository from script
   become: yes
   command: bash /tmp/script.rpm.sh
-  when: script_file.stat.exists
 
 - name: sensu-agent installation
   become: yes
