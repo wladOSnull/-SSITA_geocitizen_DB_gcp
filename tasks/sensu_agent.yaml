@@ -1,0 +1,52 @@
+---
+
+- name: check repository script file
+  stat:
+    path: /tmp/script.rpm.sh
+  register: script_file
+
+- name: get SensuGO repository script
+  become: yes  
+  get_url:
+    url: https://packagecloud.io/install/repositories/sensu/stable/script.rpm.sh
+    dest: /tmp/script.rpm.sh
+    mode: '0755'
+  when: not script_file.stat.exists
+
+- name: install SensuGO repository from script
+  become: yes
+  command: bash /tmp/script.rpm.sh
+  when: script_file.stat.exists
+
+- name: sensu-agent installation
+  become: yes
+  yum:
+    name: sensu-go-agent
+    state: present
+
+- name: get SensuGO configuration file
+  become: yes  
+  get_url:
+    url: https://docs.sensu.io/sensu-go/latest/files/agent.yml
+    dest: /etc/sensu/agent.yml
+    mode: '0644'
+
+- name: edit sensu-agent config file - backend list
+  ansible.builtin.lineinfile:
+    path: /etc/sensu/agent.yml
+    regexp: '#backend-url:'
+    line: 'backend-url:'
+
+- name: edit sensu-agent config file - basckend url
+  ansible.builtin.replace:
+    path: /etc/sensu/agent.yml
+    regexp: '#  - \"ws://127.0.0.1:8081\"'
+    replace: '  - "ws://{{ sensu_backend }}"'
+
+- name: restart systemd and start+enable sensu-agent
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    state: started
+    enabled: yes
+    name: sensu-agent.service
+...
